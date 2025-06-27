@@ -1,0 +1,14 @@
+accelerate==0.34.2
+diffusers==0.32.0
+transformers==4.45.2
+psutil==6.0.0
+colorama==0.4.6
+pillow==10.4.0
+huggingface-hub==0.33.1
+filelock==3.18.0
+fsspec==2025.5.1
+safetensors==0.4.5
+requests==2.32.4
+tqdm==4.67.0
+numpy==1.26.4
+packaging==25.0

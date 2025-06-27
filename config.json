@@ -1,0 +1,16 @@
+{
+  "mode": "generate",
+  "model": null,
+  "checkpoint_path": "models/checkpoints/cyberrealisticXL_v58.safetensors",
+  "embedding_model": "models/embeddings/sdxl_cyberrealistic_simpleneg-neg.safetensors",
+  "prompt": "urban night portrait of a young woman under glowing neon signs, thigh-highs, short skirt, black boots, minimalist punk style, soaked colorful reflections on wet pavement, (shallow depth of field), intense cinematic lighting, strong neon glow, deep shadows, dramatic rim lighting, shadowy corners, gritty lo-fi urban realism, underground fashion editorial vibe, heavy film grain texture, analog film style, cinematic neon film look, vibrant color grading, atmospheric depth, moody city background, RAW photography, ultra-detailed, hyperrealistic, photorealistic, professional cinematic fashion portrait",
+  "negative_prompt": "sdxl_cyberrealistic_simpleneg-neg, sdxl_cyberrealistic_simpleneg",
+  "num_steps": 30,
+  "cfg_scale": 4.0,
+  "use_cuda": false,
+  "width": 832,
+  "height": 1216,
+  "sampling_method": "DPM++ 2M SDE Karras",
+  "clip_skip": 1,
+  "upscale": null
+}
