@@ -1,6 +1,6 @@
 # Консольный генератор изображений Stable Diffusion
 
-Приложение предназначено для генерации или редактирования изображений с помощью моделей семейства **Stable Diffusion** и **Stable Diffusion XL**. Для работы используется библиотека `diffusers`, возможна загрузка локальных чекпоинтов и подключение пользовательских эмбеддингов.
+Приложение предназначено для генерации или редактирования изображений с помощью моделей семейства **Stable Diffusion** и **Stable Diffusion XL**. Для работы используется библиотека `diffusers`, возможна загрузка локальных чекпоинтов, подключение пользовательских эмбеддингов и LoRA‑адаптеров.
 
 ## Установка
 
@@ -44,6 +44,8 @@ python main.py --config config.json --prompt "your prompt here"
 - `checkpoint_path` — путь к локальному файлу `.safetensors` с моделью.
 - `refiner_model` — модель‑рефайнер (необязательно).
 - `embedding_model` — путь к пользовательскому эмбеддингу.
+- `lora_model` — путь к LoRA‑файлу (необязательно).
+- `lora_scale` — вес влияния LoRA‑адаптера.
 - `prompt` / `negative_prompt` — основной и негативный промпт.
 - `num_steps` — число шагов диффузии.
 - `cfg_scale` — коэффициент CFG.
@@ -72,7 +74,7 @@ python main.py --config config.json --prompt "your prompt here"
 
 ### Основные функции
 
-- **create_pipeline** (`src/pipeline_factory.py`) — загружает модель с HuggingFace или локальный чекпоинт, настраивает scheduler, refiner и clip‑skip.
+ - **create_pipeline** (`src/pipeline_factory.py`) — загружает модель с HuggingFace или локальный чекпоинт, подключает эмбеддинги и LoRA, настраивает scheduler, refiner и clip‑skip.
 - **inject_sdxl_embedding** (`src/embed_loader.py`) — внедряет пользовательские эмбеддинги в пайплайн.
 - **generate** (`src/generate.py`) — запускает процесс генерации и при наличии рефайнера обрабатывает изображение повторно.
 - **save_image** и **print_memory** (`src/utils.py`) — сохраняют результат и выводят текущее использование оперативной и видеопамяти.

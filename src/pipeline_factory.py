@@ -81,6 +81,21 @@ def create_pipeline(cfg):
         print(f"[create_pipeline] Loading embedding from: {emb_path}")
         inject_sdxl_embedding(pipe, emb_path, token="sdxl_cyberrealistic_simpleneg")
 
+    # Inject LoRA if present
+    if getattr(cfg, 'lora_model', None):
+        lora_path = cfg.lora_model
+        if not os.path.isabs(lora_path):
+            lora_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, lora_path))
+        print(f"[create_pipeline] Loading LoRA from: {lora_path}")
+        adapter_name = "lora"
+        if os.path.isfile(lora_path):
+            pipe.load_lora_weights(os.path.dirname(lora_path), weight_name=os.path.basename(lora_path), adapter_name=adapter_name)
+        else:
+            pipe.load_lora_weights(lora_path, adapter_name=adapter_name)
+        scale = getattr(cfg, 'lora_scale', 1.0)
+        pipe.set_adapters([adapter_name], adapter_weights=[scale])
+        print(f"[create_pipeline] LoRA scale set to {scale}")
+
     # Scheduler
     sched = cfg.sampling_method.lower()
     if sched.startswith('dpm'):

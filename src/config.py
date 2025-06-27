@@ -12,6 +12,8 @@ class Config:
     negative_prompt: Optional[str] = None
     refiner_model: Optional[str] = None
     embedding_model: Optional[str] = None
+    lora_model: Optional[str] = None
+    lora_scale: float = 1.0
     num_steps: int = 28
     cfg_scale: float = 7.0
     use_cuda: bool = True
