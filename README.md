@@ -1,9 +1,87 @@
-python3.10 -m venv venv
+# Консольный генератор изображений Stable Diffusion
 
-venv\Scripts\activate 
+Приложение предназначено для генерации или редактирования изображений с помощью моделей семейства **Stable Diffusion** и **Stable Diffusion XL**. Для работы используется библиотека `diffusers`, возможна загрузка локальных чекпоинтов и подключение пользовательских эмбеддингов.
 
-python -m pip install --upgrade pip
+## Установка
 
-pip install -r requirements.txt
+1. Создайте и активируйте виртуальное окружение:
+   ```bash
+   python3.10 -m venv venv
+   source venv/bin/activate  # Linux/MacOS
+   venv\Scripts\activate     # Windows
+   ```
+2. Обновите `pip` и установите зависимости:
+   ```bash
+   python -m pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+3. Установите PyTorch, подходящий для вашей системы. Пример для CUDA 12.1:
+   ```bash
+   pip install torch==2.3.0+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
+   ```
+   Другие варианты установки приведены на <https://pytorch.org/get-started/locally/>.
 
-pip install torch==2.3.0+cu121 --extra-index-url https://download.pytorch.org/whl/cu121
+## Запуск
+
+Простейший запуск с использованием файла конфигурации:
+
+```bash
+python main.py --config config.json
+```
+
+При необходимости можно передать собственный текст запроса:
+
+```bash
+python main.py --config config.json --prompt "your prompt here"
+```
+
+## Конфигурация
+
+Файл `config.json` описывает параметры генерации:
+
+- `mode` — режим работы (`generate` или `inpaint`).
+- `model` — название модели на HuggingFace (если не указан локальный чекпоинт).
+- `checkpoint_path` — путь к локальному файлу `.safetensors` с моделью.
+- `refiner_model` — модель‑рефайнер (необязательно).
+- `embedding_model` — путь к пользовательскому эмбеддингу.
+- `prompt` / `negative_prompt` — основной и негативный промпт.
+- `num_steps` — число шагов диффузии.
+- `cfg_scale` — коэффициент CFG.
+- `use_cuda` — использовать ли CUDA, если GPU доступен.
+- `width`, `height` — размеры генерируемого изображения.
+- `sampling_method` — метод семплирования (Euler, DPM++ и т.д.).
+- `clip_skip` — сколько слоёв текстового энкодера пропускать.
+- `upscale` — настройки апскейла (опционально).
+
+Пример можно найти в `config.json` в корне репозитория.
+
+## Структура проекта
+
+```
+.
+├── main.py                 # CLI-интерфейс приложения
+├── config.json             # пример конфигурации
+├── requirements.txt        # зависимости проекта
+└── src/
+    ├── config.py           # загрузка и валидация конфигурации
+    ├── embed_loader.py     # подключение кастомных эмбеддингов
+    ├── generate.py         # функция генерации изображения
+    ├── pipeline_factory.py # создание пайплайна Diffusers
+    └── utils.py            # утилиты (сохранение и вывод памяти)
+```
+
+### Основные функции
+
+- **create_pipeline** (`src/pipeline_factory.py`) — загружает модель с HuggingFace или локальный чекпоинт, настраивает scheduler, refiner и clip‑skip.
+- **inject_sdxl_embedding** (`src/embed_loader.py`) — внедряет пользовательские эмбеддинги в пайплайн.
+- **generate** (`src/generate.py`) — запускает процесс генерации и при наличии рефайнера обрабатывает изображение повторно.
+- **save_image** и **print_memory** (`src/utils.py`) — сохраняют результат и выводят текущее использование оперативной и видеопамяти.
+- **load_config** (`src/config.py`) — считывает JSON‑конфиг и проверяет обязательные параметры.
+
+## Сохранение результатов
+
+Сгенерированное изображение и копия использованной конфигурации сохраняются в папку `images/<дата_время>/`. Путь к файлу выводится в консоль с прямой ссылкой `file:///...`.
+
+## Лицензия
+
+Проект распространяется без гарантий. Используйте модели и эмбеддинги согласно их лицензиям.
