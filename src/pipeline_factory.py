@@ -83,6 +83,11 @@ def create_pipeline(cfg):
 
     # Inject LoRA if present
     if getattr(cfg, 'lora_model', None):
+        try:
+            import peft  # noqa: F401
+        except Exception as e:
+            raise RuntimeError("Package 'peft' is required for LoRA support. Install it with 'pip install peft'.") from e
+
         lora_path = cfg.lora_model
         if not os.path.isabs(lora_path):
             lora_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, lora_path))
