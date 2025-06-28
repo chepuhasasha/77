@@ -1,6 +1,7 @@
 from src.pipeline_factory import create_pipeline
 from src.utils import print_memory
 from src.autodetailer import apply_autodetailer
+from src.upscale import apply_upscale
 
 def generate(cfg):
     print_memory("before load")
@@ -41,5 +42,7 @@ def generate(cfg):
 
     if getattr(cfg, "autodetailer", False):
         image = apply_autodetailer(image, cfg)
+
+    image = apply_upscale(image, cfg)
 
     return image

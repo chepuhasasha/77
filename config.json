@@ -2,9 +2,9 @@
   "mode": "generate",
   "model": null,
   "checkpoint_path": "models/checkpoints/cyberrealisticXL_v58.safetensors",
-  "embedding_model": "models/embeddings/sdxl_cyberrealistic_simpleneg-neg.safetensors",
   "prompt": "hyper-detailed editorial photo of a glamorous young woman on a 1970s Hollywood movie studio backlot, wearing a slinky halter-neck dress with metallic shimmer, platform heels, bold eyeliner, and feathered voluminous hair, leaning against a vintage convertible under the California sun, warm saturated colors with Kodak film grain, glowing skin and subtle sweat texture",
   "negative_prompt": "sdxl_cyberrealistic_simpleneg",
+  "embedding_model": "models/embeddings/sdxl_cyberrealistic_simpleneg-neg.safetensors",
   "num_steps": 30,
   "cfg_scale": 4.0,
   "use_cuda": false,
@@ -12,6 +12,10 @@
   "height": 1216,
   "sampling_method": "DPM++ 2M SDE Karras",
   "clip_skip": 1,
-  "upscale": null,
+  "upscale": {
+    "model": "stabilityai/stable-diffusion-x4-upscaler",
+    "num_steps": 20,
+    "cfg_scale": 1.0
+  },
   "autodetailer": false  
 }
