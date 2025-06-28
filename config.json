@@ -12,6 +12,10 @@
   "height": 1216,
   "sampling_method": "DPM++ 2M SDE Karras",
   "clip_skip": 1,
-  "upscale": null,
+  "upscale": {
+    "model": "stabilityai/stable-diffusion-x4-upscaler",
+    "num_steps": 20,
+    "cfg_scale": 1.0
+  },
   "autodetailer": false  
 }

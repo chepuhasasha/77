@@ -54,6 +54,18 @@ python main.py --config config.json --prompt "your prompt here"
 - `sampling_method` — метод семплирования (Euler, DPM++ и т.д.).
 - `clip_skip` — сколько слоёв текстового энкодера пропускать.
 - `upscale` — настройки апскейла (опционально).
+```json
+"upscale": {
+    "model": "stabilityai/stable-diffusion-x4-upscaler",
+    "num_steps": 20,
+    "cfg_scale": 1.0
+}
+```
+
+Если секция `upscale` присутствует, изображение будет дополнительно
+пропущено через модель увеличения разрешения после генерации.
+
+
 - `autodetailer` — выполнять ли автоматический inpaint-проход по лицам и рукам.
 
 Пример можно найти в `config.json` в корне репозитория.
@@ -71,6 +83,7 @@ python main.py --config config.json --prompt "your prompt here"
     ├── generate.py         # функция генерации изображения
     ├── pipeline_factory.py # создание пайплайна Diffusers
     ├── autodetailer.py     # автодетейлер лиц и рук
+    ├── upscale.py          # апскейл изображений
     └── utils.py            # утилиты (сохранение и вывод памяти)
 ```
 
@@ -80,6 +93,7 @@ python main.py --config config.json --prompt "your prompt here"
 - **inject_sdxl_embedding** (`src/embed_loader.py`) — внедряет пользовательские эмбеддинги в пайплайн.
 - **generate** (`src/generate.py`) — запускает процесс генерации и при наличии рефайнера обрабатывает изображение повторно.
 - **apply_autodetailer** (`src/autodetailer.py`) — детектирует лица и руки и выполняет единый inpaint‑проход по составной маске.
+- **apply_upscale** (`src/upscale.py`) — увеличивает разрешение итогового изображения.
 - **save_image** и **print_memory** (`src/utils.py`) — сохраняют результат и выводят текущее использование оперативной и видеопамяти.
 - **load_config** (`src/config.py`) — считывает JSON‑конфиг и проверяет обязательные параметры.
 
