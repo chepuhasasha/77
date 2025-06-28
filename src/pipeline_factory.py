@@ -3,7 +3,7 @@ import shutil
 import torch
 from src.embed_loader import inject_sdxl_embedding
 # Force offline mode
-os.environ["HF_HUB_OFFLINE"] = "1"
+# os.environ["HF_HUB_OFFLINE"] = "1"
 from diffusers import (
     StableDiffusionPipeline,
     StableDiffusionXLPipeline,
