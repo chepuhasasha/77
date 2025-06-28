@@ -14,7 +14,6 @@
    ```bash
    python -m pip install --upgrade pip
    pip install -r requirements.txt
-   # в том числе библиотека `peft` для поддержки LoRA
    ```
 3. Установите PyTorch, подходящий для вашей системы. Пример для CUDA 12.1:
    ```bash
