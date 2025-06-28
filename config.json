@@ -14,5 +14,6 @@
   "height": 1216,
   "sampling_method": "DPM++ 2M SDE Karras",
   "clip_skip": 1,
-  "upscale": null
+  "upscale": null,
+  "autodetailer": false
 }

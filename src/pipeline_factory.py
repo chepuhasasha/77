@@ -10,12 +10,14 @@ from diffusers import (
     StableDiffusion3Pipeline,
     StableDiffusionInpaintPipeline,
     StableDiffusionXLImg2ImgPipeline,
+    StableDiffusionImg2ImgPipeline,
+    StableDiffusion3Img2ImgPipeline,
     EulerDiscreteScheduler,
     FlowMatchEulerDiscreteScheduler,
     DPMSolverMultistepScheduler
 )
 
-def create_pipeline(cfg):
+def create_pipeline(cfg, img2img: bool = False):
     # Prepare models root
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, 'models'))
     os.makedirs(root, exist_ok=True)
@@ -28,13 +30,23 @@ def create_pipeline(cfg):
         if not os.path.isfile(local_cp):
             shutil.copy(cfg.checkpoint_path, local_cp)
         try:
-            pipe = StableDiffusionXLPipeline.from_single_file(
-                local_cp, torch_dtype=torch.float16, safety_checker=None
-            )
+            if img2img:
+                pipe = StableDiffusionXLImg2ImgPipeline.from_single_file(
+                    local_cp, torch_dtype=torch.float16, safety_checker=None
+                )
+            else:
+                pipe = StableDiffusionXLPipeline.from_single_file(
+                    local_cp, torch_dtype=torch.float16, safety_checker=None
+                )
         except Exception:
-            pipe = StableDiffusionPipeline.from_single_file(
-                local_cp, torch_dtype=torch.float16, safety_checker=None
-            )
+            if img2img:
+                pipe = StableDiffusionImg2ImgPipeline.from_single_file(
+                    local_cp, torch_dtype=torch.float16, safety_checker=None
+                )
+            else:
+                pipe = StableDiffusionPipeline.from_single_file(
+                    local_cp, torch_dtype=torch.float16, safety_checker=None
+                )
         # Приведение компонентов к float32
         if hasattr(pipe, 'text_encoder'):
             pipe.text_encoder.to(dtype=torch.float32)
@@ -56,14 +68,22 @@ def create_pipeline(cfg):
             return m
 
         m_lower = cfg.model.lower()
-        if 'inpaint' in m_lower:
-            cls = StableDiffusionInpaintPipeline
-        elif '3.5' in m_lower and not m_lower.endswith('inpaint'):
-            cls = StableDiffusion3Pipeline
-        elif 'xl' in m_lower:
-            cls = StableDiffusionXLPipeline
+        if img2img:
+            if '3.5' in m_lower:
+                cls = StableDiffusion3Img2ImgPipeline
+            elif 'xl' in m_lower:
+                cls = StableDiffusionXLImg2ImgPipeline
+            else:
+                cls = StableDiffusionImg2ImgPipeline
         else:
-            cls = StableDiffusionPipeline
+            if 'inpaint' in m_lower:
+                cls = StableDiffusionInpaintPipeline
+            elif '3.5' in m_lower and not m_lower.endswith('inpaint'):
+                cls = StableDiffusion3Pipeline
+            elif 'xl' in m_lower:
+                cls = StableDiffusionXLPipeline
+            else:
+                cls = StableDiffusionPipeline
         pipe = _load(cls)
         # Приведение компонентов к float32
         if hasattr(pipe, 'text_encoder'):

@@ -25,6 +25,7 @@ class Config:
     sampling_method: str = "Euler"
     clip_skip: int = 0
     upscale: Optional[Dict] = field(default=None)
+    autodetailer: bool = False
 
 
 def load_config(json_path: str = "prompt.json") -> Config:
