@@ -126,7 +126,7 @@ def create_pipeline(cfg, img2img: bool = False, inpaint: bool = False):
         lora_path = cfg.lora_model
         if not os.path.isabs(lora_path):
             lora_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, lora_path))
-        print(f"[create_pipeline] Loading LoRA from: {lora_path}")
+        print(f"[pipeline] Loading LoRA from: {lora_path}")
         adapter_name = "lora"
         if os.path.isfile(lora_path):
             pipe.load_lora_weights(os.path.dirname(lora_path), weight_name=os.path.basename(lora_path), adapter_name=adapter_name)
@@ -134,7 +134,7 @@ def create_pipeline(cfg, img2img: bool = False, inpaint: bool = False):
             pipe.load_lora_weights(lora_path, adapter_name=adapter_name)
         scale = getattr(cfg, 'lora_scale', 1.0)
         pipe.set_adapters([adapter_name], adapter_weights=[scale])
-        print(f"[create_pipeline] LoRA scale set to {scale}")
+        print(f"[pipeline] LoRA scale set to {scale}")
 
     # Scheduler
     sched = cfg.sampling_method.lower()
@@ -168,15 +168,15 @@ def create_pipeline(cfg, img2img: bool = False, inpaint: bool = False):
         ref_path = cfg.refiner_model
         if not os.path.isabs(ref_path):
             ref_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, ref_path))
-        print(f"[create_pipeline] Checking refiner path: {ref_path}")
+        print(f"[pipeline] Checking refiner path: {ref_path}")
         if os.path.isfile(ref_path):
-            print(f"[create_pipeline] Using local refiner: {ref_path}")
+            print(f"[pipeline] Using local refiner: {ref_path}")
             refiner = StableDiffusionXLImg2ImgPipeline.from_single_file(ref_path, torch_dtype=torch.float16, safety_checker=None)
         elif os.path.isdir(ref_path):
-            print(f"[create_pipeline] Loading HF refiner from: {ref_path}")
+            print(f"[pipeline] Loading HF refiner from: {ref_path}")
             refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(ref_path, torch_dtype=torch.float16, local_files_only=True, safety_checker=None)
         else:
-            print('[create_pipeline] Refiner path not found')
+            print('[pipeline] Refiner path not found')
         if refiner:
             if cfg.use_cuda and torch.cuda.is_available():
                 refiner.to('cuda')
@@ -184,7 +184,7 @@ def create_pipeline(cfg, img2img: bool = False, inpaint: bool = False):
                 refiner.enable_sequential_cpu_offload()
 
     if refiner:
-        print(f"[create_pipeline] Refiner loaded: {type(refiner).__name__}")
+        print(f"[pipeline] Refiner loaded: {type(refiner).__name__}")
         return (pipe, refiner)
-    print('[create_pipeline] Refiner not used')
+    print('[pipeline] Refiner not used')
     return pipe

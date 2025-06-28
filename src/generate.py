@@ -9,7 +9,6 @@ def generate(cfg):
     # Если вернулся кортеж (pipe, refiner)
     if isinstance(pipe_result, tuple):
         pipe, refiner = pipe_result
-        print("[refiner]", type(refiner).__name__)
         image = pipe(
             prompt=cfg.prompt,
             negative_prompt=cfg.negative_prompt,
@@ -31,7 +30,6 @@ def generate(cfg):
 
     else:
         pipe = pipe_result
-        print("[refiner] not used")
         image = pipe(
             prompt=cfg.prompt,
             negative_prompt=cfg.negative_prompt,
