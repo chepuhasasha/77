@@ -9,6 +9,7 @@ from diffusers import (
     StableDiffusionXLPipeline,
     StableDiffusion3Pipeline,
     StableDiffusionInpaintPipeline,
+    StableDiffusionXLInpaintPipeline,
     StableDiffusionXLImg2ImgPipeline,
     StableDiffusionImg2ImgPipeline,
     StableDiffusion3Img2ImgPipeline,
@@ -17,7 +18,8 @@ from diffusers import (
     DPMSolverMultistepScheduler
 )
 
-def create_pipeline(cfg, img2img: bool = False):
+def create_pipeline(cfg, img2img: bool = False, inpaint: bool = False):
+    assert not (img2img and inpaint), "img2img and inpaint cannot both be True"
     # Prepare models root
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, 'models'))
     os.makedirs(root, exist_ok=True)
@@ -30,7 +32,11 @@ def create_pipeline(cfg, img2img: bool = False):
         if not os.path.isfile(local_cp):
             shutil.copy(cfg.checkpoint_path, local_cp)
         try:
-            if img2img:
+            if inpaint:
+                pipe = StableDiffusionXLInpaintPipeline.from_single_file(
+                    local_cp, torch_dtype=torch.float16, safety_checker=None
+                )
+            elif img2img:
                 pipe = StableDiffusionXLImg2ImgPipeline.from_single_file(
                     local_cp, torch_dtype=torch.float16, safety_checker=None
                 )
@@ -39,7 +45,11 @@ def create_pipeline(cfg, img2img: bool = False):
                     local_cp, torch_dtype=torch.float16, safety_checker=None
                 )
         except Exception:
-            if img2img:
+            if inpaint:
+                pipe = StableDiffusionInpaintPipeline.from_single_file(
+                    local_cp, torch_dtype=torch.float16, safety_checker=None
+                )
+            elif img2img:
                 pipe = StableDiffusionImg2ImgPipeline.from_single_file(
                     local_cp, torch_dtype=torch.float16, safety_checker=None
                 )
@@ -68,7 +78,12 @@ def create_pipeline(cfg, img2img: bool = False):
             return m
 
         m_lower = cfg.model.lower()
-        if img2img:
+        if inpaint:
+            if 'xl' in m_lower or 'inpaint' in m_lower:
+                cls = StableDiffusionXLInpaintPipeline
+            else:
+                cls = StableDiffusionInpaintPipeline
+        elif img2img:
             if '3.5' in m_lower:
                 cls = StableDiffusion3Img2ImgPipeline
             elif 'xl' in m_lower:

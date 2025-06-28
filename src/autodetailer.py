@@ -45,16 +45,20 @@ def apply_autodetailer(image, cfg):
         print('[autodetailer] nothing detected')
         return image
 
-    pipe = create_pipeline(cfg, img2img=True)
-    for left, top, right, bottom in boxes:
-        crop = image.crop((left, top, right, bottom))
-        res = pipe(
-            image=crop,
-            prompt=cfg.prompt,
-            negative_prompt=cfg.negative_prompt,
-            num_inference_steps=cfg.num_steps,
-            guidance_scale=cfg.cfg_scale,
-            strength=0.6,
-        ).images[0]
-        image.paste(res, (left, top))
-    return image
+    # Draw combined mask from all detected boxes
+    mask = Image.new("L", image.size, 0)
+    draw = ImageDraw.Draw(mask)
+    for box in boxes:
+        draw.rectangle(box, fill=255)
+
+    pipe = create_pipeline(cfg, inpaint=True)
+    result = pipe(
+        image=image,
+        mask_image=mask,
+        prompt=cfg.prompt,
+        negative_prompt=cfg.negative_prompt,
+        num_inference_steps=cfg.num_steps,
+        guidance_scale=cfg.cfg_scale,
+        strength=0.6,
+    ).images[0]
+    return result
