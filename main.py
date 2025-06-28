@@ -1,3 +1,11 @@
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message=".*Torch was not compiled with flash attention.*",
+    category=UserWarning,
+)
+
 import argparse
 from src.config import load_config
 from src.generate import generate

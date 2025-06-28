@@ -3,7 +3,7 @@
   "model": null,
   "checkpoint_path": "models/checkpoints/cyberrealisticXL_v58.safetensors",
   "embedding_model": "models/embeddings/sdxl_cyberrealistic_simpleneg-neg.safetensors",
-  "prompt": "urban night portrait of a young woman under glowing neon signs, thigh-highs, short skirt, black boots, minimalist punk style, soaked colorful reflections on wet pavement, (shallow depth of field), intense cinematic lighting, strong neon glow, deep shadows, dramatic rim lighting, shadowy corners, gritty lo-fi urban realism, underground fashion editorial vibe, heavy film grain texture",
+  "prompt": "hyper-detailed editorial photo of a glamorous young woman on a 1970s Hollywood movie studio backlot, wearing a slinky halter-neck dress with metallic shimmer, platform heels, bold eyeliner, and feathered voluminous hair, leaning against a vintage convertible under the California sun, warm saturated colors with Kodak film grain, glowing skin and subtle sweat texture",
   "negative_prompt": "sdxl_cyberrealistic_simpleneg",
   "num_steps": 30,
   "cfg_scale": 4.0,

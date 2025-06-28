@@ -113,7 +113,7 @@ def create_pipeline(cfg, img2img: bool = False, inpaint: bool = False):
         emb_path = cfg.embedding_model
         if not os.path.isabs(emb_path):
             emb_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, emb_path))
-        print(f"[create_pipeline] Loading embedding from: {emb_path}")
+        print(f"[pipeline] Loading embedding from: {emb_path}")
         inject_sdxl_embedding(pipe, emb_path, token="sdxl_cyberrealistic_simpleneg")
 
     # Inject LoRA if present
@@ -156,10 +156,10 @@ def create_pipeline(cfg, img2img: bool = False, inpaint: bool = False):
 
     # Device
     if cfg.use_cuda and torch.cuda.is_available():
-        print('Используется CUDA')
+        print('[device] CUDA')
         pipe.to('cuda')
     else:
-        print('Используется CPU с выгрузкой')
+        print('[device] GPU with CPU offload')
         pipe.enable_sequential_cpu_offload()
 
     # Refiner
